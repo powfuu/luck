@@ -1,1 +1,151 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600:700&display=swap');
+*{
+  padding:0;
+  margin:0;
+  font-family: 'Inter', sans-serif;
+  user-select:none;
+  transition:.6s all ease-in-out;
+  scroll-margin-top: 60px;
+  list-style: none;
+-webkit-tap-highlight-color:rgba(0,0,0,0);
+    outline:none;
+}
+body{
+transition:0s;
+}
+::-webkit-scrollbar {
+  width: 4px;
+  height: 5.5px;
+}
+/* Only FireFox */
+html {scrollbar-color: rgb(180,180,180) transparent;}
+::-webkit-scrollbar-track {
+  background: #252525;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(180,180,180);
+  border-radius: 12px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;
+  border-radius: 12px;
+}
+html,body{
+  overflow-x:hidden;
+-webkit-font-smoothing: antialiased;
+}
+button{
+  padding:15px 31px;
+  border-radius:5px;
+  font-size:16px;
+  background:white;
+  font-weight:600;
+  text-align:center;
+  color: rgb(51, 51, 51);
+  outline: none;
+  cursor: pointer;
+  border:none;
+}
+.button-style-light{
+
+}
+.button-style-dark{
+
+}
+.button-style-light-noborder{
+
+}
+.button-style-dark-noborder{
+
+}
+@keyframes bHafHd{
+  0%{
+    background-position-x:0%;
+  }
+  100%{
+    background-position-x:-200%;
+  }
+}
+.gradient-style-1{
+    display: inline-block;
+    background-position-x: 0px;
+    background-size: 200%;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-color: rgb(56, 123, 255);
+    background-image: linear-gradient(90deg, rgb(162, 68, 255) 0%, rgb(52, 182, 255) 50%, rgb(162, 68, 255) 100%);
+    animation: 3s ease-in-out 0s infinite normal none running bHafHd;
+}
+.gradient-style-2{
+
+}
+.gradient-style-3{
+
+}
+.swal2-icon {
+  border-width:2px !important;
+}
+.swal2-popup .swal2-styled:focus {
+    box-shadow: none !important;
+    border-radius:6.5px;
+    padding-left:22px;
+    padding-right:2px;
+}
+.swal2-title {
+  font-weight:400 !important;
+  margin-left:6px !important;
+}
+
+#loader-login{
+  top:91% !important;
+}
+.loader {
+	--color: black;
+	--size-mid: 6vmin;
+	--size-dot: 1.5vmin;
+	--size-bar: 0.2vmin;
+	--size-square: 3vmin;
+	display: block;
+	position:absolute;
+  transform:translate(-50%,-50%);
+  -ms-transform:translate(-50%,-50%);
+  top:92.5%;
+  left:0%;
+  margin-left:222.5px;
+	width: 100%;
+	display: grid;
+	place-items: center;
+}
+
+.loader::before,
+.loader::after {
+	content: '';
+	box-sizing: border-box;
+	position: absolute;
+}
+.loader.--4::before {
+	height: var(--size-bar);
+	width: 30vmin;
+	background-color: var(--color);
+	animation: loader-4 2s cubic-bezier(0, 0, 0.03, 0.9) infinite;
+}
+
+@keyframes loader-4 {
+	0%, 44%, 88.1%, 100% {
+		transform-origin: left;
+	}
+	
+	0%, 100%, 88% {
+		transform: scaleX(0);
+	}
+	
+	44.1%, 88% {
+		transform-origin: right;
+	}
+	
+	33%, 44% {
+		transform: scaleX(1);
+	}
+}
