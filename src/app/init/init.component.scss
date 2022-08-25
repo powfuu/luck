@@ -86,11 +86,25 @@ nav ul li:hover{
   position:relative;
   background-image:url(./../../assets/data);
   background-repeat:no-repeat;
+  animation: bgEntry 1.35s;
+  background-size:520px;
   background-position:center 70px;
-  background-size: 520px;
+}
+@keyframes bgEntry{
+  0%{
+    background-size:120px;
+    background-position:center 400px;
+  }
+  100%{
+    background-size:520px;
+    background-position:center 70px;
+  }
 }
 .initial-view button{
   margin-top:74px;
+  padding: 15px 18.5px;
+  font-size:16px;
+  border-radius:6px;
 }
 .initial-view h1{
   color:white;
@@ -711,6 +725,9 @@ nav ul li:hover{
     margin-top:35px;
     margin-bottom:35px;
   }
+  .l-b1 p{
+    margin-bottom:40px;
+  }
 }
 @media(max-width:393px){
   .l-b{
@@ -772,12 +789,33 @@ nav ul li:hover{
   .initial-view{
     background-size:480px;
   }
+@keyframes bgEntry{
+  0%{
+    background-size:120px;
+    background-position:center 400px;
+  }
+  100%{
+    background-size:480px;
+    background-position:center 70px;
+  }
+}
 }
 @media(max-width: 480px){
   .initial-view{
     background-size:380px;
   background-position:center 130px !important;
   }
+
+@keyframes bgEntry{
+  0%{
+    background-size:120px;
+    background-position:center 400px;
+  }
+  100%{
+    background-size:380px;
+    background-position:center 130px;
+  }
+}
 .second-view h1{
   font-size:36px;
 }

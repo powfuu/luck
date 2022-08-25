@@ -1,0 +1,94 @@
+<nav>
+	<div class="logo-nav">
+	<i style='color:black' id="logo-app-nav2" class='bx bxl-sketch'></i>
+	<p>Luck</p>
+	</div>
+	<ul class="ul-left">
+		<li>Join to a raffle right now</li>
+		<li>Create a raffle right now</li>
+	</ul>
+	<ul class="ul-right">
+
+		<li id="li-2" (click)="handleFloatViewStatus('account-view')">
+		<div class="nav-img">
+			<img [src]="'../../assets/db/'+data.banner" id="banner-pic"/>
+			<img [src]="'../../assets/db/'+data.pic" id="nav-pic"/>
+		</div>
+		</li>
+		<li [style.background]="float_notifications_view_status ? 'rgb(245,245,245)' : null" id="li-1" (click)="handleFloatViewStatus('notifications-view')">
+		<img src="../../assets/bell.svg" id="nav-bell" />
+		</li>
+		<li [style.background]="float_settings_view_status ? 'rgb(245,245,245)' : null" id="li-3" (click)="handleFloatViewStatus('settings-view')">
+		<i id="nav-settings" class="bx bx-cog"></i>
+		</li>
+		<li id="li-4" (click)="signout()">
+		<i id="nav-logout" class="gg-log-in" ></i>
+		</li>
+	</ul>
+</nav>
+<div *ngIf="float_account_view_status" @fadeOut @fadeIn class="float-account-view">
+	<div class="top-title">
+		<h2>Account</h2>
+		<i class="bx bx-x" (click)="handleFloatViewStatus('account-view')"></i>
+	</div>
+</div>
+<div *ngIf="float_settings_view_status" @fadeOut @fadeIn class="float-settings-view">
+	<div class="top-title">
+		<i id="ttb" (click)="onSettingsStatusChange('Settings')" *ngIf="settings_status != 'Settings'" @fadeIn class="bx bx-left-arrow-alt"></i>
+		<h2>{{settings_status}}</h2>
+		<i id="tti" class="bx bx-x" (click)="handleFloatViewStatus('settings-view')"></i>
+	</div>
+	<div class="settings-dashboard">
+	<div class="settings-list" *ngIf="settings_status === 'Settings'" @fadeIn>
+		<div class="settings-box-list-select" *ngFor="let data of settings_list" (click)="onHandleSettingsClick(data.title)">
+			<i [style.marginTop]="data.title === 'Privacity' ? '.5px' : null" [ngClass]="data.ic"></i>
+			<h1>{{data.title}}</h1>
+		</div>
+	</div>
+	<div class="settings-information" *ngIf="settings_status === 'Account Information'" @fadeIn>
+		<div class="information-src">
+			<img [src]="'../../assets/db/'+data.banner" id="banner-information"/>
+			<img [src]="'../../assets/db/'+data.pic" id="pic-information"/>
+			<div class="banner-information-cover">
+				<i class='bx bx-camera' ></i>
+				<p id="cp-ic">Change Photo</p>
+			</div>
+			<div class="pic-information-cover">
+				<i class='bx bx-camera' ></i>
+			</div>
+		</div>
+		<div class="information-form">
+			<p>Full Name</p>
+			<input (change)="onChangeFieldValue($event, 'fullname')" [placeholder]="data.fullname"/>
+			<p style="margin-top:15px;">Description</p>
+			<textarea (change)="onChangeFieldValue($event, 'description')" [placeholder]="data.description"></textarea>
+			<button (click)="onHandleType()">{{iamXtext}}</button>
+		</div>
+	</div>
+	<div class="settings-privacity" *ngIf="settings_status === 'Privacy'" @fadeIn >
+		<div class="privacy-list" *ngFor="let prop of privacy_list">
+			<input (change)="updatePrivacy(prop.id)" [checked]="prop.id === 0 ? tr : prop.id === 1 ? mtr : prop.id === 2 ? accs : null" type="checkbox" [name]="prop.id" [id]="prop.id" /><label [for]="prop.id">Toggle</label>
+			<p>{{prop.title}}</p>
+		</div>
+	</div>
+	<div class="settings-security" *ngIf="settings_status === 'Security'" @fadeIn >
+		<div class="change-password-box" (click)="isChangingPassword=!isChangingPassword" @fadeIn *ngIf="!isChangingPassword">
+			<i class='bx bx-lock-open'></i>
+			<p>Change Password</p>
+		</div>
+		<div class="change-password-view" *ngIf="isChangingPassword" @fadeIn>
+			<h2>Change Password</h2>
+			<input (change)="onChangeFieldValue($event, 'old-password')" placeholder="Old password" type="password"/>
+			<input (change)="onChangeFieldValue($event, 'new-password')" placeholder="New password" type="password"/>
+			<input (change)="onChangeFieldValue($event, 'confirm-new-password')" placeholder="Confirm new password" type="password"/>
+			<button (click)="onChangePassword()">Change Password</button>
+		</div>
+	</div>
+	</div>
+</div>
+<div *ngIf="float_notifications_view_status" @fadeIn class="float-notifications-view">
+	<div class="top-title">
+		<h2>Notifications</h2>
+		<i class="bx bx-x" (click)="handleFloatViewStatus('notifications-view')"></i>
+	</div>
+</div>

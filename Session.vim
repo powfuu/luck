@@ -13,18 +13,21 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +11 src/app/init/init.component.scss
-badd +16 ~/Desktop/dev/webapps/luck/src/app/init/init.component.html
-badd +0 src/index.html
+badd +131 src/app/nav/nav.component.ts
+badd +18 src/app/nav/nav.component.html
+badd +1 src/app/nav/nav.component.scss
 argglobal
 %argdel
-edit ~/Desktop/dev/webapps/luck/src/app/init/init.component.html
+edit src/app/nav/nav.component.html
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
-1wincmd h
+wincmd _ | wincmd |
+vsplit
+2wincmd h
+wincmd w
 wincmd w
 let &splitbelow = s:save_splitbelow
 let &splitright = s:save_splitright
@@ -35,10 +38,11 @@ set winminheight=0
 set winheight=1
 set winminwidth=0
 set winwidth=1
-exe 'vert 1resize ' . ((&columns * 79 + 80) / 160)
-exe 'vert 2resize ' . ((&columns * 80 + 80) / 160)
+exe 'vert 1resize ' . ((&columns * 70 + 106) / 213)
+exe 'vert 2resize ' . ((&columns * 70 + 106) / 213)
+exe 'vert 3resize ' . ((&columns * 71 + 106) / 213)
 argglobal
-balt src/app/init/init.component.scss
+balt src/app/nav/nav.component.ts
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -49,19 +53,18 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 16 - ((15 * winheight(0) + 21) / 42)
+let s:l = 45 - ((11 * winheight(0) + 26) / 53)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 16
+keepjumps 45
 normal! 0
 wincmd w
 argglobal
-if bufexists(fnamemodify("src/index.html", ":p")) | buffer src/index.html | else | edit src/index.html | endif
+if bufexists(fnamemodify("src/app/nav/nav.component.scss", ":p")) | buffer src/app/nav/nav.component.scss | else | edit src/app/nav/nav.component.scss | endif
 if &buftype ==# 'terminal'
-  silent file src/index.html
+  silent file src/app/nav/nav.component.scss
 endif
-balt ~/Desktop/dev/webapps/luck/src/app/init/init.component.html
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -72,16 +75,40 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 17 - ((16 * winheight(0) + 21) / 42)
+let s:l = 1 - ((0 * winheight(0) + 26) / 53)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 17
-normal! 07|
+keepjumps 1
+normal! 0
+wincmd w
+argglobal
+if bufexists(fnamemodify("src/app/nav/nav.component.scss", ":p")) | buffer src/app/nav/nav.component.scss | else | edit src/app/nav/nav.component.scss | endif
+if &buftype ==# 'terminal'
+  silent file src/app/nav/nav.component.scss
+endif
+balt src/app/nav/nav.component.html
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 11 - ((0 * winheight(0) + 26) / 53)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 11
+normal! 0
 wincmd w
 2wincmd w
-exe 'vert 1resize ' . ((&columns * 79 + 80) / 160)
-exe 'vert 2resize ' . ((&columns * 80 + 80) / 160)
+exe 'vert 1resize ' . ((&columns * 70 + 106) / 213)
+exe 'vert 2resize ' . ((&columns * 70 + 106) / 213)
+exe 'vert 3resize ' . ((&columns * 71 + 106) / 213)
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

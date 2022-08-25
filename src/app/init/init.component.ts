@@ -237,7 +237,7 @@ goDashboard(){
 }
   ngAfterViewInit() {
     setTimeout(() =>{
-      this.goToView('thirdli')
+      this.goToView('join')
       this.hamStatus=false;
     },50)
   }
@@ -251,9 +251,13 @@ goDashboard(){
     this.isInBox = false;
   }
   isInLoginf(){
+    if(!localStorage.getItem('token')){
     this.isInLogin= true;
     if(this.hamStatus === true){
       this.hamStatus=!this.hamStatus;
+    }
+    }else{
+      this.route.navigate(['dashboard'])
     }
   }
   closeLogin(){
@@ -298,7 +302,7 @@ goDashboard(){
     else if(view === "howitworks"){
       this.selectedItem=view
       window.scrollTo({
-        top: 2840,
+        top: 3360,
         behavior:'smooth'
       });
     }
@@ -322,7 +326,7 @@ goDashboard(){
       }else if(y >= 50){
         this.topri = "10px";
       }
-      if(y >= 624 && y <= 2699){
+      if(y >= 624 && y <= 3359){
           this.joinli.nativeElement.style.color="rgb(150,150,150)"
           this.secondli.nativeElement.style.color="black"
           this.thirdli.nativeElement.style.color="rgb(150,150,150)"
@@ -331,7 +335,7 @@ goDashboard(){
         this.inverseScheme="white"
         this.logint="rgb(55,55,55)"
       }
-      if(y>=2700){
+      if(y>= 3360){
           this.navBg = "rgba(255,255,255,1)"
           this.joinli.nativeElement.style.color="rgb(150,150,150)"
           this.secondli.nativeElement.style.color="rgb(150,150,150)"
