@@ -18,7 +18,7 @@ const db= mysql.createPool({
 
 let storage = multer.diskStorage({
   destination: function (req:any, file:any, cb:any) {
-      cb(null, '../src/db/')
+      cb(null, '../src/assets/db/')
     },
     filename: function (req:any, file:any, cb:any) {
       cb(null, Date.now() + '_luck_' + file.originalname)
@@ -86,7 +86,8 @@ app.post('/login', async(req:any,res:any)=>{
             fullname:res0[0].fullname,
             pic:res0[0].pic,
             banner:res0[0].banner,
-            type:res0[0].type
+            type:res0[0].type,
+            desc:res0[0].description
           }
           const token = generateToken(user)
           res.send({success_login:token}) 
@@ -126,7 +127,8 @@ app.post('/update-type' ,(req:any,res:any)=>{
             fullname:user.fullname,
             pic:user.pic,
             banner:user.banner,
-            type:type
+            type:type,
+            desc:user.description
           }
           const token = generateToken(usr)
           res.send({type:type, token:token})
@@ -211,11 +213,91 @@ app.post('/get-data', (req:any, res:any)=>{
 })
 app.post('/update-fullname', (req:any,res:any)=>{
   jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
-    res.send({data:"ok"})
+    if(user){
+    let query: string = "UPDATE accounts SET fullname=? WHERE id=?"
+    db.query(query, [req.body.fullname, user.id], (err0:any,res0:any)=>{
+      if(res0){
+          let usr:any = {
+            id:user.id,
+            email:user.email,
+            fullname:req.body.fullname,
+            pic:user.pic,
+            banner:user.banner,
+            type:user.type,
+            desc:user.desc
+          }
+          const token = generateToken(usr)
+          res.send({fullname:req.body.fullname, token:token})
+      }
+    })
+    }
   })
 })
 app.post('/update-description', (req:any,res:any)=>{
   jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
-    res.send({data:"ok"})
+    if(user){
+    let query: string = "UPDATE accounts SET description=? WHERE id=?"
+    db.query(query, [req.body.description, user.id], (err0:any,res0:any)=>{
+      if(res0){
+          let usr:any = {
+            id:user.id,
+            email:user.email,
+            fullname:user.fullname,
+            pic:user.pic,
+            banner:user.banner,
+            type:user.type,
+            desc:req.body.description
+          }
+          const token = generateToken(usr)
+          res.send({description:req.body.description, token:token})
+      }
+    })
+    }
+  })
+})
+app.post('/update-banner',upload.single("banner"),(req:any, res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0,(err:any, user:any)=>{
+    if(user){
+      let banner = req.file.filename;
+      let query: string = "UPDATE accounts SET banner=? where id=?"
+      db.query(query, [banner, user.id], (err0: any, res0:any)=>{
+        if(res0){
+          let usr:any = {
+            id:user.id,
+            email:user.email,
+            fullname:user.fullname,
+            pic:user.pic,
+            banner:banner,
+            type:user.type,
+            desc:user.desc
+          }
+          let token = generateToken(usr)
+          res.send({token:token, banner:banner})
+        }
+      })
+    }
+  })
+})
+app.post('/update-pic',upload.single("pic"),(req:any, res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0,(err:any, user:any)=>{
+    if(user){
+      let pic= req.file.filename;
+      let query: string = "UPDATE accounts SET pic=? where id=?"
+      db.query(query, [pic, user.id], (err0: any, res0:any)=>{
+        if(res0){
+          let usr:any = {
+            id:user.id,
+            email:user.email,
+            fullname:user.fullname,
+            pic:pic,
+            banner:user.banner,
+            type:user.type,
+            desc:user.desc
+          }
+          let token = generateToken(usr)
+          res.send({token:token, pic:pic})
+        }
+      })
+    }
   })
 })

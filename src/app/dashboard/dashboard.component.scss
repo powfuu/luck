@@ -2,4 +2,77 @@
   background:rgb(248,248,248);
   height:100vh;
   padding-top:30px;
+  display:flex;
+  padding-left:100px;
+  padding-right:100px;
+}
+.left-view,.right-view{
+  width:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.right-view{
+  justify-content:center;
+  margin-top:-250px;
+}
+.left-view{
+  align-items:flex-start;
+  padding-top:45px;
+}
+.statistics-view{
+  background:white;
+  height:500px;
+  width:90%;
+  border-radius:12px;
+}
+.join-create-view{
+  margin-top:50px;
+  display:flex;
+  gap:20px;
+}
+.join-create-v{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:11.25px;
+  cursor:pointer;
+  border-radius:12px;
+  padding:24px 30px;
+}
+.join-create-v:hover{
+  background:white;
+}
+.join-create-v i{
+  font-size:32px;
+    background-position-x: 0px;
+    background-size: 200%;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-color: rgb(56, 123, 255);
+    background-image: linear-gradient(90deg, rgb(162, 68, 255) 0%, rgb(52, 182, 255) 50%, rgb(162, 68, 255) 100%);
+    animation: 3s ease-in-out 0s infinite normal none running bHafHd;
+}
+.join-create-v p{
+  color:rgb(120,120,120);
+  font-size:15px;
+  font-weight:400;
+}
+.status-item-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.circle-status{
+  border-radius:100%;
+  height:13px;
+  width:13px;
+}
+.status-item-title p{
+  color:rgb(105,105,105);
+}
+.active-view,.inactive-view{
+  margin-top:10px;
+  height:350px;
+  width:100%;
 }

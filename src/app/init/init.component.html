@@ -229,7 +229,7 @@
 				<input #loginpassword (change)="onChangeFieldValue($event, 'loginPasswordField')" type="password" placeholder="Password"/>
 				<button (click)="onLogin()">Log In</button>
 				<ul>
-					<li style="cursor:pointer;">Forgot your password?</li>
+					<li style="cursor:pointer;" (click)="onForgotPassword()">Forgot your password?</li>
 					<li>Don't have an account? <span (click)="fromLoginToSignup()" class="gradient-style-1" style="cursor:pointer; margin-left:2px;">Sign Up</span></li>
 				</ul>
 			</div>

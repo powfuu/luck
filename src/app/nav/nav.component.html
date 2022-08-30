@@ -4,8 +4,8 @@
 	<p>Luck</p>
 	</div>
 	<ul class="ul-left">
-		<li>Join to a raffle right now</li>
-		<li>Create a raffle right now</li>
+		<li (click)="joinraffle()">Join to a raffle right now</li>
+		<li (click)="createraffle()">Create a raffle right now</li>
 	</ul>
 	<ul class="ul-right">
 
@@ -28,8 +28,28 @@
 </nav>
 <div *ngIf="float_account_view_status" @fadeOut @fadeIn class="float-account-view">
 	<div class="top-title">
-		<h2>Account</h2>
-		<i class="bx bx-x" (click)="handleFloatViewStatus('account-view')"></i>
+		<i id="tti-reverse" class="bx bx-left-arrow-alt" (click)="handleFloatViewStatus('account-view')"></i>
+		<h2 style="font-size:17px;">{{data.fullname}}</h2>
+	</div>
+	<div class="account-view-content">
+		<img [src]="'../../assets/db/'+data.banner" id="banner-avc"/>
+		<img [src]="'../../assets/db/'+data.pic" id="pic-avc"/>
+		<h4 id="type-avc">{{typeText}}</h4>
+		<ul class="account-stats-content">
+			<ul *ngIf="!tr" style="border-left:1px solid rgb(230,230,230); padding-left:20px;">
+				<p>Participations</p>
+				<li>{{data_stats.total_raffles}}</li>
+			</ul>
+			<ul *ngIf="!mtr">
+				<p>My Raffles</p>
+				<li>{{data_stats.my_total_raffles}}</li>
+			</ul>
+			<ul *ngIf="!accs">
+				<p>Followers Participations</p>
+				<li>{{data_stats.accs}}</li>
+			</ul>
+		</ul>
+		<h3 id="desc-avc">{{descr}}</h3>
 	</div>
 </div>
 <div *ngIf="float_settings_view_status" @fadeOut @fadeIn class="float-settings-view">
@@ -49,19 +69,21 @@
 		<div class="information-src">
 			<img [src]="'../../assets/db/'+data.banner" id="banner-information"/>
 			<img [src]="'../../assets/db/'+data.pic" id="pic-information"/>
-			<div class="banner-information-cover">
+			<div class="banner-information-cover" (click)="handleBannerFile()">
 				<i class='bx bx-camera' ></i>
 				<p id="cp-ic">Change Photo</p>
+				<input type="file" (change)="setBanner($event)" #bannerfile/>
 			</div>
-			<div class="pic-information-cover">
+			<div class="pic-information-cover" (click)="handlePicFile()">
 				<i class='bx bx-camera' ></i>
+				<input type="file" (change)="setPic($event)" #picfile/>
 			</div>
 		</div>
 		<div class="information-form">
 			<p>Full Name</p>
 			<input (change)="onChangeFieldValue($event, 'fullname')" [placeholder]="data.fullname"/>
 			<p style="margin-top:15px;">Description</p>
-			<textarea (change)="onChangeFieldValue($event, 'description')" [placeholder]="data.description"></textarea>
+			<textarea (change)="onChangeFieldValue($event, 'description')" [placeholder]="descr"></textarea>
 			<button (click)="onHandleType()">{{iamXtext}}</button>
 		</div>
 	</div>
@@ -86,9 +108,12 @@
 	</div>
 	</div>
 </div>
-<div *ngIf="float_notifications_view_status" @fadeIn class="float-notifications-view">
+<div *ngIf="float_notifications_view_status" @fadeOut @fadeIn class="float-notifications-view">
 	<div class="top-title">
 		<h2>Notifications</h2>
-		<i class="bx bx-x" (click)="handleFloatViewStatus('notifications-view')"></i>
+		<i id="tti" class="bx bx-x" (click)="handleFloatViewStatus('notifications-view')"></i>
+	</div>
+	<div class="notifications-content">
+
 	</div>
 </div>

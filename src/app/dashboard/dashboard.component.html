@@ -1,4 +1,94 @@
 <app-nav></app-nav>
 <div class="dashboard-view">
-  <h1>Dashboard</h1>
+  <div class="left-view">
+    <div class="status-item-title">
+      <div style="background:#73e415;" class="circle-status"></div>
+      <p>Current active raffles</p>
+    </div>
+    <div class="active-view">
+
+    </div>
+    <div class="status-item-title">
+      <div style="background:#ff6868;" class="circle-status"></div>
+      <p>History inactive raffles</p>
+    </div>
+    <div class="inactive-view">
+
+    </div>
+  </div>
+  <div class="right-view">
+    <div class="statistics-view">
+      <h1>Statistics</h1>
+    </div>
+    <div class="join-create-view">
+      <div class="join-create-v" (click)="environment.joiningInRaffle=!environment.joiningInRaffle">
+        <i class='bx bx-add-to-queue'></i>
+        <p>Join into a raffle</p>
+      </div>
+      <div class="join-create-v" (click)="environment.creatingRaffle=!environment.creatingRaffle">
+        <i class='bx bxs-add-to-queue'></i>
+        <p>Create a raffle</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div @fadeOut @fadeIn *ngIf="environment.creatingRaffle" class="raffle-creation-view">
+  <div class="bg-r-v" (click)="environment.creatingRaffle=!environment.creatingRaffle"></div>
+  <div class=raffle-creation-content>
+    <div class="top-title-v">
+      <i class='bx bxs-add-to-queue'></i>
+      <h1>Create your own raffle</h1>
+      <i (click)="environment.creatingRaffle=!environment.creatingRaffle" class="bx bx-x" id="close-v"></i>
+    </div>
+    <div class="rafl-section">
+    <div class="left-raf">
+  <form class="frm">
+    <h4>Customize your raffle</h4>
+    <p style="margin-top:15px;">Raffle Title</p>
+    <input type="text" placeholder="Choose an attractive title"/>
+    <p style="margin-top:5px;">Raffle Description</p>
+    <textarea style="margin-bottom:25px;" type="text" placeholder="Choose an attractive description"></textarea>
+    <div class="max-view">
+      <div class="max-participants-viewe">
+        <h2>Maximum Participants</h2>
+        <input type="number" max="1000000" min="2" placeholder="2 - 1000000"/>
+      </div>
+      <div class="max-winners-view">
+    <h2>Maximum Winners</h2>
+    <div class="max-participants-view">
+      <p id="minus" (click)="maximumWinners > 1 && maximumWinners <= 3 ? maximumWinners=maximumWinners-1 : null">-</p>
+      <h1>{{maximumWinners}}</h1>
+      <p id="plus" (click)="maximumWinners >= 1 && maximumWinners < 3 ? maximumWinners=maximumWinners+1 : null">+</p>
+      </div>
+      <button>Publish Raffle</button>
+    </div>
+    </div>
+  </form>
+    </div>
+    <div class="right-raf">
+      <img [src]="'../../assets/db/'+mainpic_selector" id="main-pic-raf"/>
+      <div class="selector-prize">
+        <p (click)="isMoney=false" [ngClass]="!isMoney ? 'selected' : 'not_selected'" style="border-top-left-radius:8px; border-bottom-left-radius:8px;">Others</p>
+        <p (click)="isMoney=true" [ngClass]="isMoney ? 'selected' : 'not_selected'" style="border-top-right-radius:8px; border-bottom-right-radius:8px;">Money</p>
+      </div>
+      <div *ngIf="!isMoney" @fadeIn class="other-view">
+        <img [src]="'../../assets/db/'+pic1_selector"/>
+        <img [src]="'../../assets/db/'+pic2_selector"/>
+        <img [src]="'../../assets/db/'+pic3_selector"/>
+      </div>
+      <div *ngIf="isMoney" @fadeIn class="money-view">
+        <h1>Is Money</h1>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+<div @fadeOut @fadeIn *ngIf="environment.joiningInRaffle" class="raffle-joining-view"> <div class="bg-r-v" (click)="environment.joiningInRaffle=!environment.joiningInRaffle"></div>
+  <div class=raffle-joining-content>
+    <div class="top-title-v">
+      <i class='bx bxs-add-to-queue'></i>
+      <h1>Join into a raffle</h1>
+      <i (click)="environment.joiningInRaffle=!environment.joiningInRaffle" class="bx bx-x" id="close-v"></i>
+    </div>
+  </div>
 </div>

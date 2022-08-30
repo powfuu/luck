@@ -168,7 +168,19 @@ this.Toast.fire({
 })
   }
 }
-
+onForgotPassword(){
+this.Toast.fire({
+  icon: 'question',
+  title: `Forgot password is under maintenance!`,
+  iconColor:'#666',
+  showClass: {
+    popup: 'animate__animated animate__fadeInDown animate__faster'
+  },
+  hideClass: {
+    popup: 'animate__animated animate__fadeOutUp animate__faster'
+  }
+})
+}
 onLogin(){
   this.loginIsLoading=true
   axios.post(`${environment.host}/login`, {

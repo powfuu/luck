@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   trigger,
@@ -49,7 +49,7 @@ export class NavComponent implements OnInit {
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
-    timer: 4000,
+    timer: 2000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', swal.stopTimer);
@@ -72,6 +72,12 @@ export class NavComponent implements OnInit {
       title: 'Hide total participations from all of your raffles',
     },
   ];
+  joinraffle(){
+    environment.joiningInRaffle=true;
+  }
+  createraffle(){
+    environment.creatingRaffle=true
+  }
   settings_list: any[] = [
     {
       title: 'Account Information',
@@ -87,26 +93,123 @@ export class NavComponent implements OnInit {
     },
   ];
 
+  @ViewChild("bannerfile") bannerfile: ElementRef;
+  @ViewChild("picfile") picfile: ElementRef;
+
   tr: boolean = false;
   mtr: boolean = false;
   accs: boolean = false;
 
   float_account_view_status: boolean = false;
-  float_settings_view_status: boolean = true;
+  float_settings_view_status: boolean = false;
   float_notifications_view_status: boolean = false;
 
   isChangingPassword: boolean = false;
+
+  typeText: string = ""
 
   //inputs
   oldPasswordField: string = '';
   newPasswordField: string = '';
   confirmNewPasswordField: string = '';
 
-  settings_status: string = 'Account Information';
+  bannerFile: any=null
+  picFile: any=null
+
+  settings_status: string = 'Settings';
 
   data: any = '';
-  iamXtext: string = '';
+  data_stats: any = '';
 
+  descr: string = ""
+
+  iamXtext: string = 'Change account ';
+
+  handlePicFile(){
+    this.picfile.nativeElement.click()
+  }
+  handleBannerFile(){
+    this.bannerfile.nativeElement.click()
+  }
+  setPic(file: any){
+    let formData: any = new FormData;
+    let ext = file.target.files[0].name.split('.').pop();
+    if(ext === "png" || ext === "jpg" || ext === "jpeg" || ext === "svg"){
+      formData.append('pic', file.target.files[0])
+    axios.post(`${environment.host}/update-pic`, formData, {
+      headers: { "Authorization":this.token }
+    }).then((req)=>{
+      if(req.data.token){
+        localStorage.setItem("token", req.data.token) 
+        this.Toast.fire({
+              icon: 'success',
+              title: "Picture has been uploaded successfully",
+              iconColor: '#73e415',
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster',
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster',
+              },
+            });
+            this.data.pic = req.data.pic;
+      }
+    })
+    }else{
+      this.Toast.fire({
+        icon: 'error',
+        title: `Error while uploading picture, only .png .jpg .jpeg .svg are valid`,
+        iconColor: '#ff6868',
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown animate__faster',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp animate__faster',
+        },
+      });
+    }
+  }
+
+
+
+  setBanner(file: any){
+    let formData: any = new FormData;
+    let ext = file.target.files[0].name.split('.').pop();
+    if(ext === "png" || ext === "jpg" || ext === "jpeg" || ext === "svg"){
+      formData.append('banner', file.target.files[0])
+    axios.post(`${environment.host}/update-banner`, formData, {
+      headers: { "Authorization":this.token }
+    }).then((req)=>{
+      if(req.data.token){
+        localStorage.setItem("token", req.data.token) 
+        this.Toast.fire({
+              icon: 'success',
+              title: "Banner has been uploaded successfully",
+              iconColor: '#73e415',
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster',
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster',
+              },
+            });
+            this.data.banner = req.data.banner;
+      }
+    })
+    }else{
+      this.Toast.fire({
+        icon: 'error',
+        title: `Error while uploading banner, only .png .jpg .jpeg .svg are valid`,
+        iconColor: '#ff6868',
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown animate__faster',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp animate__faster',
+        },
+      });
+    }
+  }
   updatePrivacy(prop: number) {
     if (prop === 0) {
       this.tr = !this.tr;
@@ -180,7 +283,7 @@ export class NavComponent implements OnInit {
     } else {
       this.Toast.fire({
         icon: 'error',
-        title: `Password is invalid or too short (min char: 7)`,
+        title: `Password is invalid or too short (min length: 7)`,
         iconColor: '#ff6868',
         showClass: {
           popup: 'animate__animated animate__fadeInDown animate__faster',
@@ -211,6 +314,7 @@ export class NavComponent implements OnInit {
     }
   }
   onUpdateFullName(fn: string) {
+    if(fn.length>=3){
     axios.post(`${environment.host}/update-fullname`,{
       fullname:fn
     },{
@@ -219,8 +323,22 @@ export class NavComponent implements OnInit {
       }
     }).then((req)=>{
       if(req.data.fullname){
-        this.data.name=req.data.fullname;
-      }else{
+        this.data.fullname=req.data.fullname;
+        localStorage.setItem("token",req.data.token)
+            this.Toast.fire({
+              icon: 'success',
+              title: "Full Name has been changed",
+              iconColor: '#73e415',
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster',
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster',
+              },
+            });
+      }
+    })
+  }else{
             this.Toast.fire({
               icon: 'error',
               title: "Name is too short",
@@ -232,12 +350,12 @@ export class NavComponent implements OnInit {
                 popup: 'animate__animated animate__fadeOutUp animate__faster',
               },
             });
-      }
-    })
+  }
   }
   onUpdateDescription(desc: string) {
+    if(desc.length>=7){
     axios.post(`${environment.host}/update-description`,{
-      description:desc
+      description:desc.replace(/(?:\r\n|\r|\n)/g, "<br>")
     },{
       headers:{
         "Authorization":this.token
@@ -245,11 +363,12 @@ export class NavComponent implements OnInit {
     }).then((req)=>{
       if(req.data.description){
         this.data.description=req.data.description;
-      }else{
+        localStorage.setItem("token",req.data.token)
+          this.descr = req.data.description.replace(new RegExp("<br>", "g"), '\n');
             this.Toast.fire({
-              icon: 'error',
-              title: "Description is too short",
-              iconColor: '#ff6868',
+              icon: 'success',
+              title: "Description has been changed",
+              iconColor: '#73e415',
               showClass: {
                 popup: 'animate__animated animate__fadeInDown animate__faster',
               },
@@ -259,9 +378,59 @@ export class NavComponent implements OnInit {
             });
       }
     })
+  }else{
+            this.Toast.fire({
+              icon: 'error',
+              title: "Description is too short (min length: 7)",
+              iconColor: '#ff6868',
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster',
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster',
+              },
+            });
+  }
   }
   onHandleType() {
-
+  swal.fire({
+  title: 'What is your interest?',
+  text: "This will not affect in Luck platform (you can change your interest in any time)",
+  icon: 'question',
+  iconColor:'rgb(80,80,80)',
+  confirmButtonText:'I follow content creator raffles',
+  showCancelButton:true,
+  cancelButtonText:"I'm a content creator",
+allowOutsideClick: false,
+  customClass:{
+    confirmButton:"btn-ifollow",
+    cancelButton:"btn-theyfollow",
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+    axios.post(`${environment.host}/update-type`, { 
+      type:"normal"
+      }, { headers: {'Authorization':this.token} }).then((req2)=>{
+        if(req2.data.token){
+          localStorage.setItem('token',req2.data.token)
+            this.iamXtext = 'Change to creator account';
+            this.data.type="normal"
+            this.typeText="Follower"
+        }
+      })
+  }else{
+    axios.post(`${environment.host}/update-type`, { 
+      type:"creator"
+      }, { headers: {'Authorization':this.token} }).then((req2)=>{
+        if(req2.data.token){
+          localStorage.setItem('token',req2.data.token)
+            this.iamXtext = 'Change to follower account';
+            this.data.type="creator"
+            this.typeText="Content Creator"
+        }
+      })
+  }
+})
   }
   signout() {
     localStorage.removeItem('token');
@@ -288,6 +457,7 @@ export class NavComponent implements OnInit {
       this.float_settings_view_status = false;
       this.float_notifications_view_status = false;
     } else if (floatView === 'settings-view') {
+      this.settings_status = 'Settings';
       this.float_settings_view_status = !this.float_settings_view_status;
       this.float_notifications_view_status = false;
       this.float_account_view_status = false;
@@ -316,6 +486,7 @@ export class NavComponent implements OnInit {
           this.tr = req.data.data.hidden_total_raffles;
           this.mtr = req.data.data.hidden_my_total_raffles;
           this.accs = req.data.data.hidden_accs;
+          this.data_stats = req.data.data;
         }
       });
     axios
@@ -331,10 +502,13 @@ export class NavComponent implements OnInit {
       .then((req) => {
         if (req.data.data) {
           this.data = req.data.data;
+          this.descr = req.data.data.description.replace(new RegExp("<br>", "g"), '\n');
           if (req.data.data.type === 'normal') {
             this.iamXtext = 'Change to creator account';
+            this.typeText = "Follower"
           } else if (req.data.data.type === 'creator') {
             this.iamXtext = 'Change to follower account';
+            this.typeText = "Content Creator"
           }
         }
       });
