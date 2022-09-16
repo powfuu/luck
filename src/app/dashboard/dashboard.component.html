@@ -2,23 +2,101 @@
 <div class="dashboard-view">
   <div class="left-view">
     <div class="status-item-title">
-      <div style="background:#73e415;" class="circle-status"></div>
+      <div id="status-green" class="circle-status"></div>
       <p>Current active raffles</p>
     </div>
     <div class="active-view">
-
+      <div class="non-list" *ngIf="dashboardActiveRaffles.length == 0">
+        <i class='bx bx-ghost'></i>
+        <p>There are not currently active raffles</p>
+      </div>
+      <br/>
+      <div class="yep-list-view">
+      <div (click)="navigateToRaffle(prop.code)" class="yep-list" *ngFor="let prop of dashboardActiveRaffles">
+        <img id="main-pic-l" [src]="'../../assets/db/'+prop.main_pic"/>
+        <div class="titledesc-l">
+          <h1>{{prop.title}}</h1>
+          <p>{{
+            prop.description.includes(' ') ? 
+            prop.description.length >= 90 ?
+            prop.description.slice(0,90)+"..." :
+            prop.description
+            : prop.description.length >= 33 ?
+            prop.description.slice(0,33)+"..." : 
+            prop.description
+            }}</p>
+        </div>
+        <div class="profile-viewer">
+          <img [src]="'../../assets/db/'+prop.pic"/>
+          <h1>{{prop.fullname}}</h1>
+        </div>
+      </div>
+      </div>
     </div>
     <div class="status-item-title">
-      <div style="background:#ff6868;" class="circle-status"></div>
+      <div id="status-red" class="circle-status"></div>
       <p>History inactive raffles</p>
     </div>
     <div class="inactive-view">
-
+      <div class="non-list" *ngIf="dashboardInactiveRaffles.length == 0">
+        <i class='bx bxs-ghost'></i>
+        <p>There are not currently active raffles</p>
+      </div>
+      <br/>
+      <div class="yep-list-view">
+      <div (click)="navigateToRaffle(prop.code)" class="yep-list" *ngFor="let prop of dashboardInactiveRaffles">
+        <img id="main-pic-l" [src]="'../../assets/db/'+prop.main_pic"/>
+        <div class="titledesc-l">
+          <h1>{{prop.title}}</h1>
+          <p>{{
+            prop.description.includes(' ') ? 
+            prop.description.length >= 90 ?
+            prop.description.slice(0,90)+"..." :
+            prop.description
+            : prop.description.length >= 33 ?
+            prop.description.slice(0,33)+"..." : 
+            prop.description
+            }}</p>
+        </div>
+        <div class="profile-viewer">
+          <img [src]="'../../assets/db/'+prop.pic"/>
+          <h1>{{prop.fullname}}</h1>
+        </div>
+      </div>
+      </div>
     </div>
   </div>
   <div class="right-view">
     <div class="statistics-view">
+      <div class="statistics-title">
+      <i class='bx bxs-bar-chart-alt-2'></i>
       <h1>Statistics</h1>
+    </div>
+<svg xmlns="http://www.w3.org/2000/svg"a class="wave-0" viewBox="0 0 1440 320"><path fill="#243949" fill-opacity="1" d="M0,64L48,85.3C96,107,192,149,288,170.7C384,192,480,192,576,192C672,192,768,192,864,165.3C960,139,1056,85,1152,90.7C1248,96,1344,160,1392,192L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
+      <div class="statistics-c-father">
+      <div class="statistics-c">
+        <div style="background-image:linear-gradient(90deg, #292E49 0%, #536976 50%, #292E49 100%)">
+          <i class='bx bxs-user-detail'></i>
+          <h1>{{statistics.participations}}</h1>
+          <h3>Raffles Participations</h3>
+        </div>
+        <div style="height:370px;background-image:linear-gradient(90deg, #485563 0%, #29323C 50%, #485563 100%)">
+          <i class='bx bxs-dashboard'></i>
+          <h1>{{statistics.createdRaffles}}</h1>
+          <h3>My raffles</h3>
+        </div>
+        <div style="height:440px;background-image:linear-gradient(90deg, #517FA4 0%, #243949 50%, #517FA4 100%)">
+          <i class='bx bx-medal'></i>
+          <h1>{{statistics.wins}}</h1>
+          <h3>Wins</h3>
+        </div>
+        <div style="height:320px;background-image:linear-gradient(90deg, #000000 0%, #434343 50%, #000000 100%)">
+          <i class='bx bx-line-chart'></i>
+          <h1>{{statistics.winrate}}%</h1>
+          <h3>Winrate</h3>
+        </div>
+      </div>
+      </div>
     </div>
     <div class="join-create-view">
       <div class="join-create-v" (click)="environment.joiningInRaffle=!environment.joiningInRaffle">
@@ -42,42 +120,47 @@
     </div>
     <div class="rafl-section">
     <div class="left-raf">
-  <form class="frm">
-    <h4>Customize your raffle</h4>
-    <p style="margin-top:15px;">Raffle Title</p>
-    <input type="text" placeholder="Choose an attractive title"/>
-    <p style="margin-top:5px;">Raffle Description</p>
-    <textarea style="margin-bottom:25px;" type="text" placeholder="Choose an attractive description"></textarea>
-    <div class="max-view">
-      <div class="max-participants-viewe">
-        <h2>Maximum Participants</h2>
-        <input type="number" max="1000000" min="2" placeholder="2 - 1000000"/>
+      <div class="frm">
+        <h4>Customize your raffle</h4>
+        <p style="margin-top:15px;">Raffle Title</p>
+        <input type="text" (change)="onHandleField($event,'title')" placeholder="Choose an attractive title"/>
+        <p style="margin-top:5px;">Raffle Description</p>
+        <textarea (change)="onHandleField($event,'description')" style="margin-bottom:25px;" type="text" placeholder="Choose an attractive description"></textarea>
+        <div class="max-view">
+          <div class="max-participants-viewe">
+            <h2>Maximum Participants</h2>
+            <input type="number" (change)="onHandleField($event,'max_participants')" max="1000000" min="2" placeholder="2 - 1000000 (default:2)"/>
+          </div>
+          <div class="max-winners-view">
+            <h2>Maximum Winners</h2>
+            <div class="max-participants-view">
+              <p id="minus" (click)="maximumWinners > 1 && maximumWinners <= 3 ? maximumWinners=maximumWinners-1 : null">-</p>
+              <h1>{{maximumWinners}}</h1>
+              <p id="plus" (click)="maximumWinners >= 1 && maximumWinners < 3 ? maximumWinners=maximumWinners+1 : null">+</p>
+            </div>
+            <button (click)="publishRaffle()">Publish Raffle</button> 
+          </div>
+        </div>
       </div>
-      <div class="max-winners-view">
-    <h2>Maximum Winners</h2>
-    <div class="max-participants-view">
-      <p id="minus" (click)="maximumWinners > 1 && maximumWinners <= 3 ? maximumWinners=maximumWinners-1 : null">-</p>
-      <h1>{{maximumWinners}}</h1>
-      <p id="plus" (click)="maximumWinners >= 1 && maximumWinners < 3 ? maximumWinners=maximumWinners+1 : null">+</p>
-      </div>
-      <button>Publish Raffle</button>
-    </div>
-    </div>
-  </form>
     </div>
     <div class="right-raf">
-      <img [src]="'../../assets/db/'+mainpic_selector" id="main-pic-raf"/>
+      <img (click)="handlePic(0)" [src]="mainpic_selector" id="main-pic-raf"/>
+      <input (change)="handleFilePic($event,0)" type="file" #pic0/>
       <div class="selector-prize">
-        <p (click)="isMoney=false" [ngClass]="!isMoney ? 'selected' : 'not_selected'" style="border-top-left-radius:8px; border-bottom-left-radius:8px;">Others</p>
-        <p (click)="isMoney=true" [ngClass]="isMoney ? 'selected' : 'not_selected'" style="border-top-right-radius:8px; border-bottom-right-radius:8px;">Money</p>
+        <p (click)="handleIsMoney(false)" [ngClass]="!isMoney ? 'selected' : 'not_selected'" style="border-top-left-radius:8px; border-bottom-left-radius:8px;">Others</p>
+        <p (click)="handleIsMoney(true)" [ngClass]="isMoney ? 'selected' : 'not_selected'" style="border-top-right-radius:8px; border-bottom-right-radius:8px;">Money</p>
       </div>
       <div *ngIf="!isMoney" @fadeIn class="other-view">
-        <img [src]="'../../assets/db/'+pic1_selector"/>
-        <img [src]="'../../assets/db/'+pic2_selector"/>
-        <img [src]="'../../assets/db/'+pic3_selector"/>
+        <img (click)="handlePic(1)" [src]="pic1_selector"/>
+        <img (click)="handlePic(2)" [src]="pic2_selector"/>
+        <img (click)="handlePic(3)" [src]="pic3_selector"/>
+        <input type="file" (change)="handleFilePic($event,1)" #pic1/>
+        <input type="file" (change)="handleFilePic($event,2)" #pic2/>
+        <input type="file" (change)="handleFilePic($event,3)" #pic3/>
       </div>
       <div *ngIf="isMoney" @fadeIn class="money-view">
-        <h1>Is Money</h1>
+        <h1>$</h1>
+        <input (change)="onHandleField($event, 'prize')" type="number" placeholder="0" value=0/>
       </div>
     </div>
     </div>
@@ -89,6 +172,12 @@
       <i class='bx bxs-add-to-queue'></i>
       <h1>Join into a raffle</h1>
       <i (click)="environment.joiningInRaffle=!environment.joiningInRaffle" class="bx bx-x" id="close-v"></i>
+    </div>
+    <div class="rjcb">
+      <h1>Raffle Code</h1>
+      <p>Please make sure the code you insert is correct</p>
+      <input (change)="onHandleField($event,'code')" #joinfield type="text" placeholder="User/c0de"/>
+      <button (click)="joinIntoRaffle()">Join</button>
     </div>
   </div>
 </div>

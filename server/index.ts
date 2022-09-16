@@ -25,7 +25,6 @@ let storage = multer.diskStorage({
     }
   });
   let upload = multer({ storage: storage });
-  
 
 app.use(express.json());
 app.use(cors());
@@ -296,6 +295,162 @@ app.post('/update-pic',upload.single("pic"),(req:any, res:any)=>{
           }
           let token = generateToken(usr)
           res.send({token:token, pic:pic})
+        }
+      })
+    }
+  })
+})
+app.post("/publish-raffle", (req:any,res:any)=>{
+  if(req.body.raffleMaxPField >= 2){
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+      let code = `${user.fullname.replace(' ','-')}/${Math.floor(Math.random() * 117981169) + 11798116}` 
+      let main_pic;
+      if(req.body.f0.length >=2){
+        main_pic = req.body.f0;
+      }else{
+        main_pic = "profilebanner.png"; 
+      }
+      let title = req.body.raffleTitleField;
+      let pic1 = req.body.f1;
+      let pic2 = req.body.f2;
+      let pic3 = req.body.f3;
+      let description = req.body.raffleDescriptionField;
+      let max_participants = req.body.raffleMaxPField;
+      let prizeIsMoney = req.body.isMoney;
+      let max_winners = req.body.raffleMaxWField;
+      let creatorId= user.id;
+      let prize = req.body.rafflePrize;
+      let insr = "INSERT INTO rafflep(userId, code) VALUES(?,?)"
+      db.query(insr, [user.id, code])
+      let query = "INSERT INTO raffles(code,main_pic,title,pic1,pic2,pic3,description,max_participants,prizeIsMoney,max_winners,prize, creatorId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"
+      db.query(query, [code, main_pic, title, pic1, pic2, pic3, description, max_participants, prizeIsMoney, max_winners, prize, creatorId], (err0:any,res0:any)=>{
+        if(res0){
+          res.send({status_ok: res0})
+        }else if(err0){
+          res.send({status_failed: "Error while publishing raffle, please check if all fields and images are correct"})
+        }
+      }) 
+    }
+  })
+  }else{
+    res.send({status_failed: "Maximum Participants needs to be bigger than 1"})
+  }
+})
+app.post("/upfr0", upload.single("pic0"), (req:any, res:any)=>{
+  res.send({file: req.file.filename})
+})
+app.post("/upfr1", upload.single("pic1"), (req:any, res:any)=>{
+  res.send({file: req.file.filename})
+})
+app.post("/upfr2", upload.single("pic2"), (req:any, res:any)=>{
+  res.send({file: req.file.filename})
+})
+app.post("/upfr3", upload.single("pic3"), (req:any, res:any)=>{
+  res.send({file: req.file.filename})
+})
+app.post("/join-into-raffle", (req:any,res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+      let getCode = "SELECT code FROM raffles WHERE code=?"
+      db.query(getCode, [req.body.code], (err0:any, res0:any)=>{
+        if(res0.length >=1){
+          let getjoin = "SELECT * FROM rafflep WHERE userId=? AND code=?"
+          db.query(getjoin, [user.id, req.body.code], (err2:any, res2:any)=>{
+            if(res2.length>=1){
+              res.send({failed:"You are already participating in this raffle"})
+            }else if(res2.length === 0){
+          let join = "INSERT INTO rafflep(userId,code) VALUES(?,?)"
+          db.query(join, [user.id, req.body.code], (err1:any, res1:any)=>{
+            if(res1){
+              res.send({success:res2})
+            }
+          })
+            }
+          })
+            }else if(res0.length === 0){
+          res.send({failed:`Raffle with code: ${req.body.code} does not exist.`})
+        }
+      })
+    }
+  })
+})
+app.post("/get-statistics", (req:any,res:any)=>{
+  //use knoweldge of select from multiples tables in once query and create variables like % chance to win = calculate wins and participantions
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+      let getRafflesData = "SELECT * FROM raffles WHERE first_winner=? OR second_winner=? OR third_winner=? OR creatorId=?"
+      db.query(getRafflesData, [user.id,user.id,user.id,user.id], (err0:any,res0:any)=>{
+        let getRPData = "SELECT * FROM rafflep WHERE userId=?"
+        db.query(getRPData, [user.id], (err1:any,res1:any)=>{
+          if(res1.length >= 1){
+          let firstWinnersArr = res0.filter((prop:any)=> prop.first_winner === user.id)
+          let secondWinnersArr = res0.filter((prop:any)=> prop.third_winner === user.id)
+          let thirdWinnersArr = res0.filter((prop:any)=> prop.second_winner === user.id)
+          let creatorIdArr = res0.filter((prop:any)=> prop.creatorId === user.id)
+          let wins: number = firstWinnersArr.length + secondWinnersArr.length + thirdWinnersArr.length
+          let createdRaffles: number = creatorIdArr.length
+          let participations: number = res1.length-creatorIdArr.length
+          let winrate: number = wins / participations * 100
+          //porcentaje de victorias = partidas ganadas / partidas jugadas * 100
+          let Arr = {
+            wins: wins,
+            createdRaffles: createdRaffles,
+            participations: participations,
+            winrate: winrate 
+          }
+          res.send({statistics: Arr})
+          }else if(res0.length === 0){
+          let Arr = {
+            wins: 0,
+            createdRaffles: 0,
+            participations: 0,
+            winrate:0
+          }
+          res.send({statistics: Arr})
+          }
+        })
+      })
+     }
+  })
+})
+app.post("/get-ai-dashboard-raffles", (req:any, res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+      let getActiveRaffles = "SELECT ac.fullname,ac.pic,rs.raffleIsActive,rs.description,rs.title,rs.main_pic,rs.pic1,rs.pic2,rs.pic3,rs.code FROM raffles rs JOIN rafflep rp JOIN accounts ac WHERE ac.id = rs.creatorId AND rs.code=rp.code AND rp.userId=? GROUP BY rs.id ORDER BY rs.id DESC"
+      db.query(getActiveRaffles, [user.id], (err0:any, res0:any)=>{
+        if(res0.length >=1){
+          res.send({raffles:res0})
+        }else if(res0.length === 0){
+          res.send({emptyRaffles:"Empty"})
+        }
+      })
+    }
+  })
+})
+app.post("/check-code", (req:any, res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any,user:any)=>{
+    if(user){
+      let code = req.body.code;
+      let id = user.id;
+      let check = "SELECT code FROM rafflep WHERE userId=? AND code=?"
+      db.query(check, [id, code], (err0:any,res0:any)=>{
+        if(res0.length == 0){
+          res.send({failed:"user is not in this raffle"})
+        }else if(res0.length >= 1){
+          res.send({success:"user checked"})
+        }
+      })
+    }
+  })
+})
+app.post('/get-raff-data', (req:any, res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+      let get_data = "SELECT * FROM raffles rs WHERE rs.code=?"
+      db.query(get_data, [req.body.code], (err0:any,res0:any)=>{
+        if(res0.length >=1 ){
+          res.send({data:res0})
         }
       })
     }

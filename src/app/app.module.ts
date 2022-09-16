@@ -7,6 +7,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { NorouteComponent } from './noroute/noroute.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavComponent } from './nav/nav.component';
+import { RaffleComponent } from './raffle/raffle.component';
 
 
 @NgModule({
@@ -15,12 +16,13 @@ import { NavComponent } from './nav/nav.component';
     InitComponent,
     DashboardComponent,
     NorouteComponent,
-    NavComponent
+    NavComponent,
+    RaffleComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

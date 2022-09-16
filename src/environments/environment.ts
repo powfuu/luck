@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  host: "http://192.168.1.104:3002",
+  host: "http://192.168.254.56:3002",
   S3CRET_K3Y0: "_key",
-  creatingRaffle: true,
-  joiningInRaffle: false
+  creatingRaffle: false,
+  joiningInRaffle: false,
 };
 
 /*
