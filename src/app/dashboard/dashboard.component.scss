@@ -5,6 +5,7 @@
   display:flex;
   padding-left:100px;
   padding-right:100px;
+  overflow:hidden;
 }
 .left-view,.right-view{
   width:50%;
@@ -28,6 +29,7 @@
 box-shadow: rgba(149, 157, 165, 0.2) 0px 6px 20px;
   width:90%;
   border-radius:12px;
+  z-index:0;
 }
 .join-create-view{
   margin-top:70px;
@@ -126,6 +128,7 @@ box-shadow: rgba(149, 157, 165, 0.2) 0px 6px 20px;
 @media screen and (max-width:1100px) {
  .dashboard-view{
    flex-direction:column;
+   padding-bottom:400px;
  } 
  .left-view, .right-view{
    width:100%;
@@ -144,6 +147,9 @@ box-shadow: rgba(149, 157, 165, 0.2) 0px 6px 20px;
   .join-create-view{
     margin-bottom:70px;
   }
+ .dashboard-view{
+   padding-bottom:200%;
+ } 
   .join-create-v p{
     white-space:nowrap;
     font-size:14px;
@@ -287,6 +293,12 @@ box-shadow: rgba(240, 240, 240, 0.2) 0px 6px 20px;
   }
 }
 @media screen and (max-width: 1100px) {
+    .right-view{
+        padding-bottom:100px;
+    }
+    .join-create-view{
+        margin-top:50px;
+    }
 .yep-list{
   width:570px;
 }

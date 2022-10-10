@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  host: "http://192.168.254.56:3002",
+  host: "http://192.168.1.106:3002",
   S3CRET_K3Y0: "_key",
   creatingRaffle: false,
   joiningInRaffle: false,

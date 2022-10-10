@@ -14,7 +14,6 @@
 }
 html{
 transition:0s;
-padding-bottom:30px;
 background:rgb(248,248,248);
 }
 @media screen and (max-width:1100px) {
@@ -24,7 +23,6 @@ html{
 }
 @media screen and (max-width:500px) {
 html{
-padding-bottom:100px;
 }
 }
 ::-webkit-scrollbar {

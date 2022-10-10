@@ -18,7 +18,7 @@ export class RaffleComponent implements OnInit {
   }
   ngOnInit(): void {
     axios.post(`${environment.host}/check-code`, {
-      code: this.code
+      code: this.code.replace('%20'," ")
     }, {
       headers: {
         "Authorization":this.token

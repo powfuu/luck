@@ -397,7 +397,7 @@ app.post("/get-statistics", (req:any,res:any)=>{
             wins: wins,
             createdRaffles: createdRaffles,
             participations: participations,
-            winrate: winrate 
+            winrate: winrate >=1 ? winrate : 0
           }
           res.send({statistics: Arr})
           }else if(res0.length === 0){
