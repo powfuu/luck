@@ -456,3 +456,88 @@ app.post('/get-raff-data', (req:any, res:any)=>{
     }
   })
 })
+app.post('/get-creator-data', (req:any, res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+      let get_data = "SELECT * FROM accounts acc WHERE acc.id=?"
+      db.query(get_data, [req.body.code], (err0:any,res0:any)=>{
+        if(res0.length >=1 ){
+          res.send({data:res0})
+        }
+      })
+    }
+  })
+})
+app.post('/end-raffle', (req:any,res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+        let nanwin = req.body.nanWin;
+        let getList = 'SELECT * FROM rafflep rp WHERE rp.code=?'
+        db.query(getList, [req.body.code], (err1:any, res1:any)=>{
+            if(res1.length >= 1){
+                let arr = res1.slice(1)
+                let nan1: any, nan2:any, nan3:any; 
+                  if(nanwin >= 1){
+                    do{
+                      nan1=Math.floor(Math.random() * arr.length) 
+                    }while(nan1 === nan2 || nan1 === nan3)
+                  }
+                  if(nanwin >= 2){
+                    do{
+                      nan2=Math.floor(Math.random() * arr.length) 
+                    }while(nan2 === nan1 || nan1 === nan3)
+                  }
+                  if(nanwin === 3){
+                    do{
+                      nan3=Math.floor(Math.random() * arr.length) 
+                    }while(nan3 === nan1 || nan3 === nan2)
+                  }
+              let query = ''
+              setTimeout(() => {
+              if(nanwin == 1){
+                        query='UPDATE raffles rs SET rs.first_winner=? WHERE rs.code=?'
+                        db.query(query, [arr[nan1].userId,req.body.code])
+                        console.log("nanwin1 query executing, nan1 = "+nan1+" with account id = "+arr[nan1].userId)
+              }
+              if(nanwin == 2){
+                        console.log("nanwin1 query executing, nan1 = "+nan1+" with account id = "+arr[nan1].userId+" and nanwin2 query, nan2 = "+nan2+" with account id = "+arr[nan2].userId)
+                        query='UPDATE raffles rs SET rs.first_winner=?, rs.second_winner=? WHERE rs.code=?'
+                        db.query(query, [arr[nan1].userId,arr[nan2].userId,req.body.code])
+              }
+              if(nanwin == 3){
+                        query='UPDATE raffles rs SET rs.first_winner=?, rs.second_winner=?, rs.third_winner=? WHERE rs.code=?'
+                        db.query(query, [arr[nan1].userId,arr[nan2].userId,arr[nan3].userId,req.body.code])
+              }
+              }, 200);
+        let end_query = 'UPDATE raffles SET raffleIsActive=? WHERE code=?'
+        db.query(end_query, [false, req.body.code], (err0:any, res0:any)=>{
+            if(res0.length >=1){
+                res.send({ok:"rmved"})
+            }
+        })
+            }
+        })
+    }
+  })
+})
+app.post('/get-raffle-participants-list', (req:any,res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+        let query_get = "SELECT * FROM rafflep rp,accounts acc, raffles rs where rp.code=? AND rp.userId=acc.id AND rs.code=? AND rs.creatorId!=acc.id"
+        db.query(query_get, [req.body.code, req.body.code], (err0:any,res0:any)=>{
+            if(res0.length >= 1){
+                res.send({data:res0})
+            }else if(res0.length === 0){
+                res.send({empty:"empty"})
+            }
+        })
+    }
+  })
+})
+app.post('/get-userId', (req:any, res:any)=>{
+  jwt.verify(req.headers['authorization'], environment.S3CRET_K3Y0, (err:any, user:any)=>{
+    if(user){
+        res.send({id:user.id})
+    }
+  })
+})

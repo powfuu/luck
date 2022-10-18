@@ -1,1 +1,64 @@
-<p>raffle works with CODE: {{code}}</p>
+<div class='raffle-content'>
+    <div class='raffle-content-topview'>
+        <div class='raffle-content-topview-left'>   
+            <i (click)="goBack()" class='bx bx-chevron-left'></i>
+            <h1>{{data.title}}</h1>
+        </div> 
+        <button *ngIf="data.raffleIsActive == true && data.creatorId == accountId && list.length >= 2" id='raffle-content-topview-right-button' (click)="endRaffle()">Finish Raffle</button>
+    </div>
+    <div class='raffle-content-body'>
+        <div class='raffle-content-left'>
+            <div class='raffle-content-left-box'> 
+                <div class='empty-left-box-content' *ngIf="list.length === 0">
+                    <img src='../../assets/empty.svg' id='empty-left-img'/>
+                    <h3 id='empty-text'>Raffle does not have any participants yet.</h3>
+                </div>
+                <div class="list-left-box-content" *ngIf="list.length >= 1">
+                    <h1 id='participants-title'>Participants ({{list.length}})</h1>
+                    <div *ngIf='data.raffleIsActive' class='winners-div'>
+                        <h3 id='raffle-winners-text'>Raffle Winners</h3>
+                    <div class='acc-list' *ngFor="let acc of listFiltered">   
+                        <img [src]="'../../assets/db/'+acc.pic"/>
+                        <h1>{{acc.fullname}}</h1>
+                        <h3>{{acc.userId}}</h3>
+                </div>
+                    </div>
+                    <div id='aclsd' *ngIf="!data.raffleIsActive">
+                    <div class='acc-list' *ngFor="let acc of list">   
+                        <img [src]="'../../assets/db/'+acc.pic"/>
+                        <h1>{{acc.fullname}}</h1>
+                        <h2>{{acc.first_winner == acc.userId ? "First Place" : acc.second_winner == acc.userId ? "Second Place" : acc.third_winner == acc.userId ? "Third Place" : null}}</h2>
+                        <h3>{{acc.userId}}</h3>
+                </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+        <div class='raffle-content-right'>
+            <div class='raffle-content-right-box'> 
+                <h4 [style]="'color:'+raffleStatusColor">{{raffleStatus}}</h4>
+                <img [src]="'../../assets/db/'+data.main_pic"/>
+                <h3>{{data.description}}</h3>
+                <div class='creator-view'>
+                    <img [src]="'../../assets/db/'+creatorData.pic"/>
+                    <h3>{{creatorData.fullname}}</h3>
+                </div>
+                <div *ngIf="data.prizeIsMoney==false" class="imgs-view">
+                    <img [src]="'../../assets/db/'+data.pic1"/>
+                    <img [src]="'../../assets/db/'+data.pic2"/>
+                    <img [src]="'../../assets/db/'+data.pic3"/>
+                </div>
+                <div *ngIf="data.prizeIsMoney==true" class="money-view-content">
+                    <h1>Winning Price</h1>
+                    <h3>{{data.prize}} <h1 class='dollar'>$</h1></h3>
+                </div>
+                <div class="rules-view">
+                    <h1 class='raffle-rules-text'>Raffle Rules</h1>
+                    <h3 class='raffle-rules-maxp-text'>Max Winners ({{data.max_winners}})</h3>
+                    <h3 class='raffle-rules-maxw-text'>Max Participants ({{data.max_participants}})</h3>
+                    <p id="raffle-rules-code">{{data.code}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
